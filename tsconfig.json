@@ -5,7 +5,7 @@
     "strict": true,
     "baseUrl": "./src",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["*"]
     },
     "types": ["jest"],
     "allowJs": true,

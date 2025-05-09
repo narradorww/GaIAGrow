@@ -1,4 +1,6 @@
-export const summerTheme = {
+import { Theme } from 'types/theme'
+
+export const summerTheme: Theme = {
   primary: '#02AB82',
   secondary: '#61BF9A',
   accent: '#EEE296',

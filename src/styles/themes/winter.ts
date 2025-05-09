@@ -1,4 +1,6 @@
-export const winterTheme = {
+import { Theme } from 'types/theme'
+
+export const winterTheme: Theme = {
   primary: '#2F77C3',
   secondary: '#1126A5',
   accent: '#979CA2',

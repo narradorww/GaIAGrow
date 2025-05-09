@@ -1,6 +1,6 @@
 import { Season } from 'types/season'
 
-export function getSeasonByDateAndLocation(date: Date, latitude: number): Season {
+export function getSeasonByDateAndLocation(date = new Date(), latitude: number): Season {
   const month = date.getMonth()
 
   const northernSeasons: Season[] = [

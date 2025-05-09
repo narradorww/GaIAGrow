@@ -1,4 +1,6 @@
-export const autumnTheme = {
+import { Theme } from 'types/theme'
+
+export const autumnTheme: Theme = {
   primary: '#FC5E1D',
   secondary: '#FE8B4C',
   accent: '#EB9911',
