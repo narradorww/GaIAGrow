@@ -3,19 +3,15 @@
   "compilerOptions": {
     "jsx": "react",
     "strict": true,
-    "baseUrl": "./",
+    "baseUrl": "./src",
     "paths": {
-      "@context/*": ["src/context/*"],
-      "@navigation/*": ["src/navigation/*"],
-      "@screens/*": ["src/screens/*"],
-      "@theme/*": ["src/theme/*"],
-      "@utils/*": ["src/utils/*"]
+      "@/*": ["src/*"]
     },
-    "typeRoots": ["node_modules/@types"],
-    "types": ["react-native", "jest"],
+    "types": ["jest"],
     "allowJs": true,
     "resolveJsonModule": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node16",
+    "module": "Node16"
   },
-  "include": ["src", "src/@types"]
+  "include": ["src", "src/types"]
 }
