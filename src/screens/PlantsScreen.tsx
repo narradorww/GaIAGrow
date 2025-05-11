@@ -5,7 +5,7 @@ import { View, Text, StyleSheet } from 'react-native'
 export default function AssistantScreen() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Assistant Screen</Text>
+      <Text style={styles.text}>Plant Screen</Text>
     </View>
   )
 }

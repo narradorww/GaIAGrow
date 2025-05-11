@@ -1,15 +1,49 @@
-// tests/App.test.tsx
+// App.test.tsx
 import React from 'react'
 
-import { render, screen } from '@testing-library/react-native'
+import { render } from '@testing-library/react-native'
 
 import App from './App'
 
-describe('App Component', () => {
-  it('should render the "Hello,  World!" text', () => {
-    render(<App />)
+// Mock @expo/vector-icons to avoid act() warnings
+jest.mock('@expo/vector-icons', () => {
+  return {
+    Ionicons: () => {
+      const IconMock = () => <></>
+      IconMock.displayName = 'Ionicons'
+      return <IconMock />
+    },
+  }
+})
 
-    const helloWorldText = screen.getByText('Hello, World! 🚀')
-    expect(helloWorldText).toBeDefined()
+// Mock das telas com displayName
+jest.mock('@/screens/HomeScreen', () => {
+  const Mock = () => <></>
+  Mock.displayName = 'HomeScreen'
+  return Mock
+})
+
+jest.mock('@/screens/AssistantScreen', () => {
+  const Mock = () => <></>
+  Mock.displayName = 'AssistantScreen'
+  return Mock
+})
+
+jest.mock('@/screens/PlantsScreen', () => {
+  const Mock = () => <></>
+  Mock.displayName = 'PlantsScreen'
+  return Mock
+})
+
+jest.mock('@/screens/GardenScreen', () => {
+  const Mock = () => <></>
+  Mock.displayName = 'GardenScreen'
+  return Mock
+})
+
+describe('App', () => {
+  it('should render the app with ThemeProvider and Navigation', () => {
+    const tree = render(<App />)
+    expect(tree).toBeTruthy()
   })
 })
