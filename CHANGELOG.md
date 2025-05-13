@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/narradorww/GaIAGrow/compare/v1.2.0...v1.3.0) (2025-05-13)
+
+
+### Features
+
+* add Plants screen with filters by name, layer, and planting season ([116b1d6](https://github.com/narradorww/GaIAGrow/commit/116b1d6e5d95363ddfdcde4fa0e6867f31ae0ead))
+
 ## 1.2.0 (2025-05-12)
 
 
