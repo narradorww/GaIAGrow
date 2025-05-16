@@ -1,12 +1,12 @@
 import { Theme } from 'types/theme'
 
 export const winterTheme: Theme = {
-  primary: '#2F77C3',
-  secondary: '#1126A5',
-  accent: '#979CA2',
-  surface: '#F5F5F5',
-  background: '#E0E0E0',
-  text: '#000000',
-  border: '#031730',
-  notification: '#010A13',
+  primary: '#9AAED9', // azul acinzentado
+  secondary: '#C5CAE9', // lavanda fria
+  accent: '#E8EAF6', // cinza azulado claro
+  surface: '#FFFFFF',
+  background: '#F2F4F8', // quase branco frio
+  text: '#3F4A5A',
+  border: '#B0BEC5',
+  notification: '#A0AFC2', // azul gelo
 }

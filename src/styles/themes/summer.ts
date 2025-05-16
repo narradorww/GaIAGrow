@@ -1,12 +1,12 @@
 import { Theme } from 'types/theme'
 
 export const summerTheme: Theme = {
-  primary: '#02AB82',
-  secondary: '#61BF9A',
-  accent: '#EEE296',
-  surface: '#F5F5F5',
-  background: '#F5F5F5',
-  text: '#000000',
-  border: '#006A5C',
-  notification: '#053F43',
+  primary: '#AED9E0', // azul piscina
+  secondary: '#FFC1A1', // coral suave
+  accent: '#FFF8DC', // creme solar
+  surface: '#FFFFFF',
+  background: '#F0F8F9', // azul claro
+  text: '#405B5D',
+  border: '#B2DFDB',
+  notification: '#F9A58C', // coral/laranja claro
 }

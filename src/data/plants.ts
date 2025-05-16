@@ -335,7 +335,7 @@ export const mockPlants: Plant[] = [
   {
     _id: 'f944a579-7b7c-4c44-8b29-53e7b0eaf6e0',
     name: 'Rosemary',
-    imgUrl: '/assets/plants/rodemary.jpg',
+    imgUrl: '/assets/plants/rosemary.jpg',
     strata: {
       height: 80,
       layers: [{ name: 'medium', maxHeight: 90, space: 35 }],

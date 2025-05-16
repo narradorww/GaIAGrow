@@ -3,6 +3,7 @@ import React from 'react'
 
 import { View, Text, Image, StyleSheet } from 'react-native'
 
+import { plantImages } from '@/assets/plants/plantImage'
 import { plantLabels } from '@/constants/plantLabels'
 import { useThemeContext } from '@/context/ThemeContext'
 import { Plant } from '@/types/plant'
@@ -14,9 +15,11 @@ interface PlantCardProps {
 export const PlantCard = ({ plant }: PlantCardProps) => {
   const { theme } = useThemeContext()
 
+  const imageSource = plantImages[plant.name] || require('@/assets/plants/default.jpg')
+
   return (
     <View style={[styles.card, { backgroundColor: theme.surface }]}>
-      <Image source={{ uri: plant.imgUrl }} style={styles.image} resizeMode="cover" />
+      <Image source={imageSource} style={styles.image} resizeMode="cover" />
       <Text style={[styles.title, { color: theme.text }]}>
         {plantLabels[plant.name] || plant.name}
       </Text>
