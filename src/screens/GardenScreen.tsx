@@ -12,14 +12,20 @@ import {
   StatusBar,
   ScrollView,
   TouchableOpacity,
+  Modal,
+  FlatList,
+  Pressable,
 } from 'react-native'
 
 import { useThemeContext } from '@/context/ThemeContext'
+import { mockPlants } from '@/data/plants'
+import { optimizePlanting } from '@/utils/optmizePlanting'
 
 const CELL_SIZE = 5
 const CELL_PIXEL_SIZE = 20
 const MAX_PLOT_WIDTH = 100
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ORIENTATIONS = ['North', 'East', 'South', 'West'] as const
 
 type Orientation = (typeof ORIENTATIONS)[number]
@@ -31,6 +37,7 @@ type Plot = {
   height: number
   cells: number
   orientation: Orientation
+  plantGrid?: { planta: string | null; camada: number }[][]
 }
 
 export default function GardenScreen() {
@@ -42,6 +49,15 @@ export default function GardenScreen() {
   const [height, setHeight] = useState('')
   const [orientation, setOrientation] = useState<Orientation>('North')
   const [editId, setEditId] = useState<string | null>(null)
+  const [showPlantModal, setShowPlantModal] = useState(false)
+  const [lastCreatedPlot, setLastCreatedPlot] = useState<Plot | null>(null)
+  const [selectedPlants, setSelectedPlants] = useState<string[]>([])
+
+  const handleTogglePlant = (name: string) => {
+    setSelectedPlants((prev) =>
+      prev.includes(name) ? prev.filter((p) => p !== name) : [...prev, name],
+    )
+  }
 
   const handleCreatePlot = () => {
     if (!name || !width || !height) return
@@ -50,38 +66,42 @@ export default function GardenScreen() {
     const numericHeight = Number(height)
     const totalCells = Math.floor((numericWidth * numericHeight) / (CELL_SIZE * CELL_SIZE))
 
-    if (editId) {
-      setPlots((prev) =>
-        prev.map((plot) =>
-          plot.id === editId
-            ? {
-                ...plot,
-                name,
-                width: numericWidth,
-                height: numericHeight,
-                cells: totalCells,
-                orientation,
-              }
-            : plot,
-        ),
-      )
-      setEditId(null)
-    } else {
-      const newPlot: Plot = {
-        id: Date.now().toString(),
-        name,
-        width: numericWidth,
-        height: numericHeight,
-        cells: totalCells,
-        orientation,
-      }
-      setPlots((prev) => [...prev, newPlot])
+    const newPlot: Plot = {
+      id: Date.now().toString(),
+      name,
+      width: numericWidth,
+      height: numericHeight,
+      cells: totalCells,
+      orientation,
     }
+    setLastCreatedPlot(newPlot)
+    setShowPlantModal(true)
 
     setName('')
     setWidth('')
     setHeight('')
     setOrientation('North')
+  }
+
+  const confirmPlantSelection = () => {
+    if (!lastCreatedPlot) return
+
+    const cols = Math.floor(lastCreatedPlot.width / CELL_SIZE)
+    const rows = Math.floor(lastCreatedPlot.height / CELL_SIZE)
+    const selectedPlantObjects = mockPlants.filter((p) => selectedPlants.includes(p.name))
+
+    // Usa algoritmo inteligente de consórcio e companheirismo
+    const grid = optimizePlanting(rows, cols, selectedPlantObjects)
+
+    const finalPlot: Plot = {
+      ...lastCreatedPlot,
+      plantGrid: grid,
+    }
+
+    setPlots((prev) => [...prev, finalPlot])
+    setShowPlantModal(false)
+    setLastCreatedPlot(null)
+    setSelectedPlants([])
   }
 
   const handleDeletePlot = (id: string) => {
@@ -104,17 +124,26 @@ export default function GardenScreen() {
     for (let y = 0; y < rows; y++) {
       const row = []
       for (let x = 0; x < cols; x++) {
+        const cellData = plot.plantGrid?.[y]?.[x]
+        const bgColor = cellData?.planta ? theme.primary : theme.surface
+        const camada = cellData?.camada ?? null
         row.push(
           <View
             key={`cell-${x}-${y}`}
             style={[
               styles.cell,
               {
-                backgroundColor: theme.surface,
+                backgroundColor: bgColor,
                 borderColor: theme.border,
               },
             ]}
-          />,
+          >
+            {cellData?.planta && (
+              <Text style={{ fontSize: 6, color: theme.text }} numberOfLines={1}>
+                {cellData.planta.slice(0, 3).toUpperCase()} ({camada})
+              </Text>
+            )}
+          </View>,
         )
       }
       grid.push(
@@ -167,26 +196,6 @@ export default function GardenScreen() {
           onChangeText={setHeight}
         />
 
-        <View style={styles.pickerWrapper}>
-          <Text style={{ color: theme.text, marginBottom: 4 }}>Orientation</Text>
-          <View style={[styles.pickerRow, { borderColor: theme.border }]}>
-            {ORIENTATIONS.map((o) => (
-              <TouchableOpacity
-                key={o}
-                onPress={() => setOrientation(o)}
-                style={[
-                  styles.pickerItem,
-                  {
-                    backgroundColor: orientation === o ? theme.primary : theme.surface,
-                  },
-                ]}
-              >
-                <Text style={{ color: theme.text }}>{o}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-
         <Button title={editId ? 'Update Plot' : 'Add Plot'} onPress={handleCreatePlot} />
 
         {plots.map((plot) => (
@@ -212,6 +221,32 @@ export default function GardenScreen() {
             <View style={styles.gridWrapper}>{renderGrid(plot)}</View>
           </View>
         ))}
+
+        <Modal visible={showPlantModal} transparent animationType="slide">
+          <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center' }}>
+            <View
+              style={{ backgroundColor: theme.surface, margin: 16, padding: 16, borderRadius: 8 }}
+            >
+              <Text style={[styles.title, { color: theme.text }]}>Select Plants</Text>
+              <FlatList
+                data={mockPlants}
+                keyExtractor={(item) => item._id}
+                renderItem={({ item }) => (
+                  <Pressable onPress={() => handleTogglePlant(item.name)}>
+                    <Text
+                      style={{
+                        color: selectedPlants.includes(item.name) ? theme.primary : theme.text,
+                      }}
+                    >
+                      {item.name}
+                    </Text>
+                  </Pressable>
+                )}
+              />
+              <Button title="Confirm and Plant" onPress={confirmPlantSelection} />
+            </View>
+          </View>
+        </Modal>
       </ScrollView>
     </KeyboardAvoidingView>
   )
@@ -237,22 +272,6 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     paddingHorizontal: 10,
     marginBottom: 8,
-  },
-  pickerWrapper: {
-    marginVertical: 8,
-  },
-  pickerRow: {
-    flexDirection: 'row',
-    gap: 8,
-    borderWidth: 1,
-    borderRadius: 6,
-    padding: 6,
-    justifyContent: 'space-between',
-  },
-  pickerItem: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 4,
   },
   plotCard: {
     padding: 12,
@@ -284,5 +303,7 @@ const styles = StyleSheet.create({
     width: CELL_PIXEL_SIZE,
     height: CELL_PIXEL_SIZE,
     borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 })

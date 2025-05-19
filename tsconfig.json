@@ -13,5 +13,5 @@
     "moduleResolution": "node16",
     "module": "Node16"
   },
-  "include": ["src", "src/types"]
+  "include": ["src", "src/types", "src/types/env.d.ts"]
 }
